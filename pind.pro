@@ -1,6 +1,8 @@
 QT += core
 QT -= gui
 
+QMAKE_CXXFLAGS += -std=c++0x
+
 TARGET = pind
 CONFIG += console
 CONFIG -= app_bundle
@@ -18,4 +20,7 @@ HEADERS += \
     map.hpp \
     snake.hpp \
     game.hpp
+
+DISTFILES += \
+    maps/0.map
 
