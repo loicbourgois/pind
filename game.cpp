@@ -3,9 +3,7 @@
 #include <thread>
 #include <fstream>
 #include <QDebug>
-
 #include <windows.h>
-
 #include <thread>
 
 #define WAIT 200
@@ -81,6 +79,7 @@ void Game::initSnakes(std::string mapPath)
     int lineCount = 0;
     int x = 0;
     int y = 0;
+    // Get the heads
     for(std::string line ; getline(input, line) ; lineCount++)
     {
         switch (lineCount) {
@@ -105,6 +104,7 @@ void Game::initSnakes(std::string mapPath)
             break;
         }
     }
+    // Get the bodies
     std::ifstream input2(mapPath.c_str());
     for(std::string line ; getline(input2, line) ; lineCount++)
     {
@@ -143,8 +143,6 @@ void Game::initFood()
         foods[0].y = rand()%map.getHeight();
     }
 }
-
-
 
 bool Game::checkEmpty(Point p)
 {
