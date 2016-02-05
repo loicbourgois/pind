@@ -4,7 +4,15 @@
 #include <fstream>
 #include <QDebug>
 
+#include <windows.h>
+
+#include <thread>
+
 #define WAIT 200
+#define UP 1
+#define DOWN 2
+#define LEFT 3
+#define RIGHT 4
 
 Game::Game()
 {
@@ -19,23 +27,49 @@ Game::Game(std::string mapPath)
     initFood();
 }
 
+void Game::handleEvent()
+{
+    while(true)
+    {
+        //std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        if (GetAsyncKeyState(VK_UP) < 0)
+           snakes[0].setDirection(UP);
+        if (GetAsyncKeyState(VK_DOWN) < 0)
+            snakes[0].setDirection(DOWN);
+        if (GetAsyncKeyState(VK_LEFT) < 0)
+            snakes[0].setDirection(LEFT);
+        if (GetAsyncKeyState(VK_RIGHT) < 0)
+           snakes[0].setDirection(RIGHT);
+    }
+}
+
 void Game::start()
 {
+    std::thread t1(&Game::handleEvent, this);
     while(true)
     {
         for(int i = 0 ; i < snakes.size() ; i++)
         {
-            snakes[i].move(&map, food, snakes);
+            snakes[i].move(&map, foods, snakes);
         }
         display();
         std::this_thread::sleep_for(std::chrono::milliseconds(WAIT));
     }
+    t1.join();
 }
 
 void Game::display()
 {
     std::cout << std::string(100, '\n' );
-    std::cout << map.toString(snakes, food);
+    std::string str = map.toString(snakes, foods);
+    std::string str2 = "";
+    for(int i = 0 ; i < str.size() ; i++)
+    {
+        if(!(i%32))
+            str2.push_back('\n');
+        str2.push_back(str[i]);
+    }
+    std::cout << str2;
 }
 
 void Game::initSnakes(std::string mapPath)
@@ -100,15 +134,17 @@ void Game::initSnakes(std::string mapPath)
 
 void Game::initFood()
 {
-    food.x = rand()%map.getWidth();
-    food.y = rand()%map.getHeight();
-    while(!checkEmpty(food))
+    foods.push_back(Point());
+    foods[0].x = rand()%map.getWidth();
+    foods[0].y = rand()%map.getHeight();
+    while(!checkEmpty(foods[0]))
     {
-        food.x = rand()%map.getWidth();
-        food.y = rand()%map.getHeight();
+        foods[0].x = rand()%map.getWidth();
+        foods[0].y = rand()%map.getHeight();
     }
-    qDebug() << food.x << ";" << food.y;
 }
+
+
 
 bool Game::checkEmpty(Point p)
 {

@@ -15,15 +15,15 @@ public:
     void display();
     void initSnakes(std::string mapPath);
     void initFood();
+    void handleEvent();
 private:
     bool checkEmpty(Point p);
-
     Map map;
     int speed;
     bool ai;
     bool sound;
     std::vector<Snake> snakes;
-    Point food;
+    std::vector<Point> foods;
 };
 
 #endif // GAME_H

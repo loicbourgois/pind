@@ -49,9 +49,12 @@ std::string Map::toString()
     {
         for(int i = 0 ; i < width ; i++)
         {
-            str.push_back( map[j][i]);
+            if(map[j][i] == '#')
+                str.push_back('w');
+            else
+                str.push_back(' ');
         }
-        str.push_back('\n');
+        //str.push_back('\n');
     }
     return str;
 }
@@ -66,16 +69,24 @@ std::string Map::toString(std::vector<Snake> snakes)
         {
             int x = body[j].x;
             int y = body[j].y;
-            str[y*(width+1) + x ]= 'x';
+            if(j)
+            {
+                str[y*(width) + x ]= 'b';
+            }
+            else
+            {
+                str[y*(width) + x ]= 'h';
+            }
         }
     }
     return str;
 }
 
-std::string Map::toString(std::vector<Snake> snakes, Point food)
+std::string Map::toString(std::vector<Snake> snakes, std::vector<Point> foods)
 {
     std::string str = toString(snakes);
-    str[food.y*(width+1) + food.x ]= 'o';
+    for(int i = 0 ; i < foods.size() ; i++)
+        str[foods[i].y*(width) + foods[i].x ]= 'f';
     return str;
 }
 

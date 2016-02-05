@@ -3,23 +3,28 @@
 
 #include <vector>
 #include "point.hpp"
+#include <string>
 
 class Map;
 
 class Snake
 {
 public:
-    Snake(bool isIa = false);
+    Snake(bool isBot = false);
     void addBodyPart(int x, int y);
     void addHead(int x, int y);
-    void move(Map * map, Point food, std::vector<Snake> snakes);
+    void move(Map * map, std::vector<Point> foods, std::vector<Snake> snakes);
     std::vector<Point> getBody();
+    void setDirection(int d);
 private:
+    void think(Map *map, std::vector<Snake> snakes, std::vector<Point> foods);
     static unsigned int count;
     std::vector<Point> body;
     Point speed;
-    bool isIa;
+    bool isBot;
+    bool isAlive;
     int id;
+    int direction;
 };
 
 #endif // SNAKE_H
