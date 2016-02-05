@@ -2,11 +2,11 @@
 
 #include <fstream>
 #include "game.hpp"
+#include <QDebug>
 
 Map::Map(Game *parent):
     parent(parent)
 {
-
 }
 
 Map::Map(Game * parent, std::string path) :
@@ -23,15 +23,18 @@ Map::Map(Game * parent, std::string path) :
         case 1:
             height = std::stoi(line);
             break;
-        case 2:
-            // TODO
-            //
-            break;
         default:
             std::vector<char> l;
             for(int i = 0 ; i < line.size() ; i++)
             {
-                l.push_back(line[i]);
+                if(line[i] == '#')
+                {
+                    l.push_back('#');
+                }
+                else //if(line[i] == ' ' || line[i] == ' ')
+                {
+                    l.push_back(' ');
+                }
             }
             map.push_back(l);
             break;
@@ -53,3 +56,37 @@ std::string Map::toString()
     return str;
 }
 
+std::string Map::toString(std::vector<Snake> snakes)
+{
+    std::string str = toString();
+    for(int i = 0 ; i < snakes.size() ; i++)
+    {
+        std::vector<Point> body = snakes[i].getBody();
+        for(int j = 0 ; j < body.size() ; j++)
+        {
+            int x = body[j].x;
+            int y = body[j].y;
+            str[y*(width+1) + x ]= 'x';
+        }
+    }
+    return str;
+}
+
+std::string Map::toString(std::vector<Snake> snakes, Point food)
+{
+    std::string str = toString(snakes);
+    str[food.y*(width+1) + food.x ]= 'o';
+    return str;
+}
+
+bool Map::caseIsEmpty(int x, int y)
+{
+    if(map[y][x] == ' ')
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}

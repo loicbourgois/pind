@@ -13,13 +13,15 @@ SOURCES += main.cpp \
     display.cpp \
     map.cpp \
     snake.cpp \
-    game.cpp
+    game.cpp \
+    point.cpp
 
 HEADERS += \
     display.hpp \
     map.hpp \
     snake.hpp \
-    game.hpp
+    game.hpp \
+    point.hpp
 
 DISTFILES += \
     maps/0.map

@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <snake.hpp>
 
 class Game;
 
@@ -12,6 +13,11 @@ public:
     Map(Game * parent = nullptr);
     Map(Game * parent, std::string path);
     std::string toString();
+    std::string toString(std::vector<Snake> snakes);
+    std::string toString(std::vector<Snake> snakes, Point food);
+    int getWidth() {return width;}
+    int getHeight() {return height;}
+    bool caseIsEmpty(int x, int y);
 private:
     std::vector< std::vector<char> > map;
     int width;
