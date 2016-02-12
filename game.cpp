@@ -72,8 +72,8 @@ void Game::display()
 
 void Game::initSnakes(std::string mapPath)
 {
-    snakes.push_back(Snake());
-    snakes.push_back(Snake(true));
+    snakes.push_back(Snake(this));
+    snakes.push_back(Snake(this, true));
 
     std::ifstream input(mapPath.c_str());
     int lineCount = 0;
@@ -135,12 +135,17 @@ void Game::initSnakes(std::string mapPath)
 void Game::initFood()
 {
     foods.push_back(Point());
-    foods[0].x = rand()%map.getWidth();
-    foods[0].y = rand()%map.getHeight();
-    while(!checkEmpty(foods[0]))
+    newFood(0);
+}
+
+void Game::newFood(int id)
+{
+    foods[id].x = rand()%map.getWidth();
+    foods[id].y = rand()%map.getHeight();
+    while(!checkEmpty(foods[id]))
     {
-        foods[0].x = rand()%map.getWidth();
-        foods[0].y = rand()%map.getHeight();
+        foods[id].x = rand()%map.getWidth();
+        foods[id].y = rand()%map.getHeight();
     }
 }
 

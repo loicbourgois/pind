@@ -1,5 +1,6 @@
 #include "snake.hpp"
 #include "map.hpp"
+#include "game.hpp"
 
 #define UP 1
 #define DOWN 2
@@ -8,7 +9,8 @@
 
 unsigned int Snake::count = 0;
 
-Snake::Snake(bool isBot) :
+Snake::Snake(Game *game, bool isBot) :
+    game(game),
     isBot(isBot),
     isAlive(true)
 {
@@ -40,6 +42,15 @@ void Snake::move(Map * map, std::vector<Point> foods, std::vector<Snake> snakes)
     body[0].y += speed.y + map->getHeight();
     body[0].x %= map->getWidth();
     body[0].y %= map->getHeight();
+
+    for(int i = 0 ; i < foods.size() ; i++)
+    {
+        if(foods[i].x == body[0].x && foods[i].y == body[0].y)
+        {
+            this->game->newFood(i);
+            addBodyPart(body[0].x, body[0].y);
+        }
+    }
 }
 
 std::vector<Point> Snake::getBody()

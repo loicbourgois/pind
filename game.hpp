@@ -16,6 +16,7 @@ public:
     void initSnakes(std::string mapPath);
     void initFood();
     void handleEvent();
+    void newFood(int id);
 private:
     bool checkEmpty(Point p);
     Map map;
