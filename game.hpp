@@ -19,12 +19,16 @@ public:
     void newFood(int id);
 private:
     bool checkEmpty(Point p);
+    bool go;
+    void reset();
     Map map;
     int speed;
     bool ai;
     bool sound;
     std::vector<Snake> snakes;
     std::vector<Point> foods;
+    std::string mapPath;
+    bool editP;
 };
 
 #endif // GAME_H

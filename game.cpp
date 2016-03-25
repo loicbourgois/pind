@@ -6,7 +6,7 @@
 #include <windows.h>
 #include <thread>
 
-#define WAIT 200
+//#define WAIT 200
 #define UP 1
 #define DOWN 2
 #define LEFT 3
@@ -19,15 +19,17 @@ Game::Game()
 
 Game::Game(std::string mapPath)
 {
+    this->mapPath = mapPath;
     map = Map(this, mapPath);
     initSnakes(mapPath);
     ai = false;
+    speed = 128;
     initFood();
 }
 
 void Game::handleEvent()
 {
-    while(true)
+    while(go)
     {
         //std::this_thread::sleep_for(std::chrono::milliseconds(1));
         if (GetAsyncKeyState(VK_UP) < 0)
@@ -38,22 +40,37 @@ void Game::handleEvent()
             snakes[0].setDirection(LEFT);
         if (GetAsyncKeyState(VK_RIGHT) < 0)
            snakes[0].setDirection(RIGHT);
+        if (GetAsyncKeyState('R') < 0) // R
+           go = false;
+        if (GetAsyncKeyState('P') & 0x0001)
+        {
+            speed/=2;
+            if(!speed)
+                speed = 1;
+        }
+        if (GetAsyncKeyState('M') & 0x0001)
+        {
+            speed*=2;
+        }
     }
 }
 
 void Game::start()
 {
+    go = true;
     std::thread t1(&Game::handleEvent, this);
-    while(true)
+    while(go)
     {
         for(int i = 0 ; i < snakes.size() ; i++)
         {
             snakes[i].move(&map, foods, snakes);
         }
         display();
-        std::this_thread::sleep_for(std::chrono::milliseconds(WAIT));
+        std::this_thread::sleep_for(std::chrono::milliseconds(speed));
     }
     t1.join();
+    // Restart
+    reset();
 }
 
 void Game::display()
@@ -157,4 +174,15 @@ bool Game::checkEmpty(Point p)
         retour = false;
     }
     return retour;
+}
+
+void Game::reset()
+{
+    snakes.clear();
+    map = Map(this, mapPath);
+    initSnakes(mapPath);
+    ai = false;
+    speed = 128;
+    initFood();
+    start();
 }

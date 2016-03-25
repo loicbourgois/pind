@@ -29,10 +29,13 @@ void Snake::addBodyPart(int x, int y)
 
 void Snake::move(Map * map, std::vector<Point> foods, std::vector<Snake> snakes)
 {
+    if(!isAlive)
+        return;
     if(isBot)
     {
         think(map, snakes, foods);
     }
+    // Move
     for(int i = body.size() - 1 ; i > 0 ; i--)
     {
         body[i].x = body[i-1].x;
@@ -51,6 +54,27 @@ void Snake::move(Map * map, std::vector<Point> foods, std::vector<Snake> snakes)
             addBodyPart(body[0].x, body[0].y);
         }
     }
+    // Walls
+    if(!map->caseIsEmpty(body[0].x, body[0].y))
+    {
+        this->isAlive = false;
+    }
+    // Snakes
+    for(int i = 0 ; i < snakes.size() ; i++)
+    {
+
+        int firstJ = 0;
+        if(i != this->id)
+            firstJ = 1;
+
+        for(int j = firstJ ; j < snakes[i].body.size() ; j++)
+        {
+            if(snakes[i].body[j].x == body[0].x && snakes[i].body[j].y == body[0].y)
+            {
+                this->isAlive = false;
+            }
+        }
+    }
 }
 
 std::vector<Point> Snake::getBody()
@@ -64,24 +88,24 @@ void Snake::setDirection(int d)
     case UP:
         if(direction == LEFT || direction == RIGHT || direction == NULL)
         {
-        speed.x = 0;
-        speed.y = -1;
-        direction = d;
+            speed.x = 0;
+            speed.y = -1;
+            direction = d;
         }
         break;
     case DOWN:
         if(direction == LEFT || direction == RIGHT || direction == NULL)
         {
-        speed.x = 0;
-        speed.y = 1;
-        direction = d;
+            speed.x = 0;
+            speed.y = 1;
+            direction = d;
         }
         break;
     case LEFT:if(direction == UP || direction == DOWN || direction == NULL)
         {
-        speed.x = -1;
-        speed.y = 0;
-        direction = d;
+            speed.x = -1;
+            speed.y = 0;
+            direction = d;
         }
         break;
     case RIGHT:
@@ -99,5 +123,12 @@ void Snake::setDirection(int d)
 
 void Snake::think(Map * map, std::vector<Snake> snakes, std::vector<Point> foods)
 {
-
+    if(direction==UP)
+        setDirection(LEFT);
+    else if(direction==LEFT)
+        setDirection(DOWN);
+    else if(direction==DOWN)
+        setDirection(RIGHT);
+    else if(direction==RIGHT)
+        setDirection(UP);
 }
